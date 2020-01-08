@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Authentication</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sign_up">Sign_Up</string>
+    <string name="forgot_you_password">Forgot you password?</string>
+    <string name="powered_by_capture_solutions">Powered by Capture Solutions</string>
+    <string name="checkbox">CheckBox</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign_In</string>
+    <string name="email">Email</string>
+    <string name="logo">Logo</string>
+</resources>
