@@ -4,17 +4,25 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
+import com.cs4sample.authentication.adapters.PlayersAdapter;
+import com.cs4sample.authentication.models.Player;
 import com.cs4sample.authentication.models.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseManager {
     // Context Object
     private Context mContext;
     // The name of the database
-    public static final String DATABASE_NAME = "sample_login";
-    // The database table name
-    public static final String DATABASE_TABLE = "users_table";
+    public static final String ASSETS_DATABASE_NAME = "login_sample.db";
+    // The name of the table of the users with an account
+    public static final String USERS_TABLE = "users_table";
+    // The name of the players tables
+    public static final String PLAYERS_TB = "players_tb";
     // The version of the database
     public static final int DATABASE_VERSION = 1;
     // The id of the user
@@ -47,13 +55,24 @@ public class DatabaseManager {
         return cv;
     }
 
+
+
     public boolean saveUser() {
         User user = new User();
         user.setUsername(DatabaseManager.DUMMY_NAME);
         user.setPassword(DatabaseManager.DUMMY_PASSWORD);
         this.mSQLiteDatabase = mSQLiteHelper.getWritableDatabase();
 
-        long result = mSQLiteDatabase.insert(DatabaseManager.DATABASE_TABLE, null,
+        String drop = "DROP TABLE IF EXISTS " + DatabaseManager.USERS_TABLE;
+        mSQLiteDatabase.execSQL(drop);
+
+        String createDatabase = "CREATE TABLE " + DatabaseManager.USERS_TABLE +
+                "(" + DatabaseManager.ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                + DatabaseManager.ROW_NAME + " TEXT,"
+                + DatabaseManager.ROW_PASSWORD + " TEXT" + ")";
+
+        mSQLiteDatabase.execSQL(createDatabase);
+        long result = mSQLiteDatabase.insert(DatabaseManager.USERS_TABLE, null,
                 prepareContentValues(user));
 
         return result > 0;
@@ -65,7 +84,7 @@ public class DatabaseManager {
         if (saveUser()) {
             Log.d("saved User:", "success");
             // get the user from the database by the id
-            String getUserByName = "SELECT * FROM " + DatabaseManager.DATABASE_TABLE + " WHERE "
+            String getUserByName = "SELECT * FROM " + DatabaseManager.USERS_TABLE + " WHERE "
                     + DatabaseManager.ROW_NAME + " =?";
             this.mSQLiteDatabase = mSQLiteHelper.getReadableDatabase();
             Cursor cursor = mSQLiteDatabase.rawQuery(getUserByName, new  String[]{"fits"});
@@ -85,12 +104,46 @@ public class DatabaseManager {
 
     }
 
-//    public void deleteUser() {
-//        // get the user from the database by the id
-//        String getUserByName = "DELETE * FROM " + DatabaseManager.DATABASE_TABLE + " WHERE "
-//                + DatabaseManager.ROW_NAME + " = " + DatabaseManager.DUMMY_NAME;
-//
-//        Cursor cursor = mSQLiteDatabase.delete(getUserByName, null);
-//
-//    }
+    public ArrayList<Player> getPlayers() {
+        ArrayList<Player> players = new ArrayList<>();
+        this.mSQLiteDatabase = mSQLiteHelper.getReadableDatabase();
+        Cursor cursor = mSQLiteDatabase.query(DatabaseManager.PLAYERS_TB, null,
+                null, null, null, null, null, null);
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Player player = new Player();
+                player.setId(cursor.getInt(cursor.getColumnIndexOrThrow(Player.ROW_ID)));
+                player.setAge(cursor.getString(cursor.getColumnIndexOrThrow(Player.ROW_AGE)));
+                player.setName(cursor.getString(cursor.getColumnIndexOrThrow(Player.ROW_NAME)));
+                player.setPosition(cursor.getString(cursor.getColumnIndexOrThrow(Player.ROW_POSITION)));
+                players.add(player);
+
+
+            }
+            cursor.close();
+        }
+
+
+        return players;
+
+    }
+
+    private boolean updatePlayer(String name, Player player) {
+        String updatePLayer = " UPDATE " + Player.PLAYER_TB + " SET "
+                + Player.ROW_NAME + "=?," + Player.ROW_AGE + "=?," + Player.ROW_POSITION + "=?";
+
+        SQLiteStatement s = mSQLiteDatabase.compileStatement(updatePLayer);
+        s.bindString(1, player.getName());
+        s.bindString(2,player.getAge());
+        s.bindString(3, player.getPosition());
+        if (player.getImage() != null) {
+            s.bindBlob(4, player.getImage());
+        }
+        s.bindString(5, name);
+        long result = s.executeUpdateDelete();
+
+        return result > 0;
+    }
+
 }
