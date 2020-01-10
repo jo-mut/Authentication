@@ -3,15 +3,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:mContext=".activities.HomeActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/homeToolbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:theme="?attr/actionBarTheme" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/homeToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/colorPrimary">
+
+            <ImageView
+                android:layout_gravity="end"
+                android:layout_weight="5"
+                android:layout_margin="5dp"
+                android:tint="@android:color/white"
+                app:srcCompat="@drawable/ic_add_24px"
+                android:id="@+id/addImageView"
+                android:layout_width="36dp"
+                android:layout_height="36dp"/>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/playerRecyclerView"

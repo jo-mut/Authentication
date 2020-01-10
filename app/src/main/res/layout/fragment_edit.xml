@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="30dp"
+    tools:context=".fragments.EditFragment">
+
+    <androidx.cardview.widget.CardView
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="100dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp">
+
+        <ImageView
+            app:srcCompat="@drawable/ic_account_circle_24px"
+            android:id="@+id/profileImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/todo" />
+
+    </androidx.cardview.widget.CardView>
+
+    <EditText
+        android:drawableStart="@drawable/ic_person"
+        android:drawableLeft="@drawable/ic_person"
+        android:drawableTint="@android:color/darker_gray"
+        android:drawablePadding="5dp"
+        android:padding="15dp"
+        android:textColor="@color/iconColor"
+        android:hint="@string/email"
+        android:inputType="text"
+        android:textColorHint="@android:color/darker_gray"
+        android:id="@+id/nameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <EditText
+        android:drawableStart="@drawable/ic_person"
+        android:drawableLeft="@drawable/ic_person"
+        android:drawableTint="@android:color/darker_gray"
+        android:drawablePadding="5dp"
+        android:padding="15dp"
+        android:textColor="@color/iconColor"
+        android:hint="Age"
+        android:inputType="text"
+        android:textColorHint="@android:color/darker_gray"
+        android:id="@+id/ageEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <EditText
+        android:drawableStart="@drawable/ic_person"
+        android:drawableLeft="@drawable/ic_person"
+        android:drawablePadding="5dp"
+        android:drawableTint="@android:color/darker_gray"
+        android:padding="15dp"
+        android:textColor="@color/iconColor"
+        android:hint="Position"
+        android:inputType="text"
+        android:textColorHint="@android:color/darker_gray"
+        android:id="@+id/positionEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autofillHints="" />
+
+    <Button
+        android:id="@+id/doneButton"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/sign_up_button_background"
+        android:text="@string/done"
+        android:textAllCaps="false"
+        android:textColor="@color/iconColor" />
+
+</LinearLayout>

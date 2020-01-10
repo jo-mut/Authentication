@@ -1,51 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:orientation="vertical"
+android:layout_width="match_parent"
+android:layout_height="wrap_content">
+
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
+    android:orientation="horizontal"
     android:layout_height="wrap_content">
 
+    <androidx.cardview.widget.CardView
+        android:layout_margin="5dp"
+        app:cardCornerRadius="50dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp">
+
+        <ImageView
+            app:srcCompat="@drawable/ic_account_circle_24px"
+            android:id="@+id/profileImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </androidx.cardview.widget.CardView>
+
     <LinearLayout
-        android:padding="10dp"
-        android:layout_width="match_parent"
-        android:orientation="horizontal"
+        android:layout_margin="5dp"
+        android:orientation="vertical"
+        android:layout_weight="70"
+        android:layout_width="0dp"
         android:layout_height="wrap_content">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/profile_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            app:srcCompat="@drawable/ic_person"
-            app:civ_border_width="2dp"
-            app:civ_border_color="#FF000000"/>
-
-        <LinearLayout
-            android:orientation="vertical"
+        <TextView
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:id="@+id/playerNameTexView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"/>
 
-            <TextView
-                android:padding="5dp"
-                android:textSize="16sp"
-                android:id="@+id/playerNameTexView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_marginTop="5dp"
+            android:textSize="14sp"
+            android:textStyle="italic"
+            android:id="@+id/playerAgeTexView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-            <TextView
-                android:textSize="14sp"
-                android:id="@+id/playerAgeTexView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:textSize="14sp"
-                android:id="@+id/playerPositionTexView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
+        <TextView
+            android:textSize="14sp"
+            android:textStyle="italic"
+            android:id="@+id/playerPositionTexView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
+
+    <ImageView
+        android:layout_weight="5"
+        android:padding="5dp"
+        android:layout_margin="5dp"
+        app:srcCompat="@drawable/ic_create_24px"
+        android:id="@+id/editPlayerImageView"
+        android:layout_width="36dp"
+        android:layout_height="36dp"/>
+
+</LinearLayout>
 
 </LinearLayout>

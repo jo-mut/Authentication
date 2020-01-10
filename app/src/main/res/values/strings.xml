@@ -11,4 +11,9 @@
     <string name="sign_in">Sign_In</string>
     <string name="email">Email</string>
     <string name="logo">Logo</string>
+    <!--    activity labels-->
+    <string name="home_activity">Home</string>
+    <string name="done">Done</string>
+    <string name="todo">TODO</string>
 </resources>
+

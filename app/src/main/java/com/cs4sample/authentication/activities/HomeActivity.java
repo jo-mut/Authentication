@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.cs4sample.authentication.R;
 import com.cs4sample.authentication.adapters.PlayersAdapter;
@@ -17,8 +18,9 @@ import com.cs4sample.authentication.models.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
     private Toolbar mHomeToolbar;
+    private ImageView mImageView;
     private RecyclerView mPlayerRecyclerView;
     private PlayersAdapter mPlayersAdapter;
     private List<Player> mPlayers = new ArrayList<>();
@@ -31,6 +33,11 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         // initialize home views
         mHomeToolbar = findViewById(R.id.homeToolbar);
+        mImageView = findViewById(R.id.addImageView);
+        mHomeToolbar.setTitle(R.string.app_name);
+        // set support action bar
+        setSupportActionBar(mHomeToolbar);
+        // back button on toolbar
         mHomeToolbar.setNavigationIcon(R.drawable.ic_left_arrow);
         mHomeToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,5 +62,13 @@ public class HomeActivity extends AppCompatActivity {
         mPlayerRecyclerView.setHasFixedSize(false);
         mPlayerRecyclerView.setAdapter(mPlayersAdapter);
         mPlayersAdapter.notifyItemInserted(mPlayers.size() - 1);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.addImageView) {
+
+        }
     }
 }

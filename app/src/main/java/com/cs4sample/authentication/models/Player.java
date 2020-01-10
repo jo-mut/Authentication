@@ -6,6 +6,7 @@ public class Player {
     public static final String ROW_NAME = "name";
     public static final String ROW_AGE = "age";
     public static final String ROW_POSITION = "position";
+    public static final String ROW_IMAGE = "photo";
 
     int id;
     String name;

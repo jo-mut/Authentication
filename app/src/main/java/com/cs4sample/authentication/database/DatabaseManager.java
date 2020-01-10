@@ -24,7 +24,7 @@ public class DatabaseManager {
     // The name of the players tables
     public static final String PLAYERS_TB = "players_tb";
     // The version of the database
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 3;
     // The id of the user
     public static final String ROW_ID = "_id";
     // The username of the user
@@ -129,9 +129,11 @@ public class DatabaseManager {
 
     }
 
-    private boolean updatePlayer(String name, Player player) {
+    public boolean updatePlayer(String name, Player player) {
         String updatePLayer = " UPDATE " + Player.PLAYER_TB + " SET "
-                + Player.ROW_NAME + "=?," + Player.ROW_AGE + "=?," + Player.ROW_POSITION + "=?";
+                + Player.ROW_NAME + "=?," + Player.ROW_AGE + "=?,"
+                + Player.ROW_POSITION + "=?," + Player.ROW_IMAGE + "=? " + "WHERE " + Player.ROW_NAME + "=?";
+        mSQLiteDatabase = mSQLiteHelper.getWritableDatabase();
 
         SQLiteStatement s = mSQLiteDatabase.compileStatement(updatePLayer);
         s.bindString(1, player.getName());

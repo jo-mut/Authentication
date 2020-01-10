@@ -12,6 +12,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.cs4sample.authentication.models.Player;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -191,7 +193,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-//        String upgrade = "DROP TABLE IF EXISTS " + DatabaseManager.USERS_TABLE;
-//        db.execSQL(upgrade);
+        newVersion = DatabaseManager.DATABASE_VERSION;
+        if (oldVersion < newVersion) {
+            db.execSQL("ALTER TABLE " + Player.PLAYER_TB  + " ADD COLUMN photo BLOB;");
+        }
     }
 }
