@@ -17,7 +17,6 @@ android:layout_height="wrap_content">
         android:layout_height="50dp">
 
         <ImageView
-            app:srcCompat="@drawable/ic_account_circle_24px"
             android:id="@+id/profileImageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>

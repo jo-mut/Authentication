@@ -12,8 +12,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.cs4sample.authentication.models.Player;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -23,7 +21,7 @@ import java.util.Locale;
 
 public class SQLiteHelper extends SQLiteOpenHelper {
     // database
-    public static String DB_NAME = DatabaseManager.ASSETS_DATABASE_NAME;
+    public static String DB_NAME = DatabaseManager.LOGIN_SAMPLE_DB;
     public static String DB_PATH;
     public SQLiteDatabase mSQLiteDatabase;
     // mContext
@@ -32,11 +30,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     static final long DATABASE_PAD_SIZE = 1048576;
 
     public SQLiteHelper(@Nullable Context context) {
-        super(context, DatabaseManager.ASSETS_DATABASE_NAME,
+        super(context, DatabaseManager.LOGIN_SAMPLE_DB,
                 null, DatabaseManager.DATABASE_VERSION);
         this.mContext = context;
         String packageName = mContext.getPackageName();
-        DB_NAME = DatabaseManager.ASSETS_DATABASE_NAME;
+        DB_NAME = DatabaseManager.LOGIN_SAMPLE_DB;
         DB_PATH = "data/data/" + packageName + "/databases/";
         openDataBase();
     }
@@ -185,7 +183,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
 //        String createDatabase = "CREATE TABLE " + DatabaseManager.USERS_TABLE +
 //                "(" + DatabaseManager.ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-//                + DatabaseManager.ROW_NAME + " TEXT,"
+//                + DatabaseManager.ROW_USERNAME + " TEXT,"
 //                + DatabaseManager.ROW_PASSWORD + " TEXT" + ")";
 //
 //        db.execSQL(createDatabase);
@@ -193,9 +191,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        newVersion = DatabaseManager.DATABASE_VERSION;
-        if (oldVersion < newVersion) {
-            db.execSQL("ALTER TABLE " + Player.PLAYER_TB  + " ADD COLUMN photo BLOB;");
-        }
+//        newVersion = DatabaseManager.DATABASE_VERSION;
+////        if (oldVersion < newVersion) {
+////            db.execSQL("ALTER TABLE " + Player.PLAYER_TB  + " ADD COLUMN " + Player.ROW_IMAGE + " BLOB");
+////        }
     }
 }

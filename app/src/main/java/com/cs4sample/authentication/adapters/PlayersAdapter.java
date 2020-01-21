@@ -1,6 +1,7 @@
 package com.cs4sample.authentication.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -16,11 +17,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs4sample.authentication.R;
-import com.cs4sample.authentication.fragments.EditFragment;
+import com.cs4sample.authentication.activities.EditPlayerActivity;
 import com.cs4sample.authentication.models.Player;
 import com.cs4sample.authentication.viewholders.PlayersViewHolder;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PlayersAdapter extends
@@ -29,14 +32,12 @@ public class PlayersAdapter extends
     private List<Player> mPlayers = new ArrayList<>();
     private static final String PLAYER_NAME = Player.ROW_NAME;
 
+
     public PlayersAdapter(Context mContext, List<Player> mPlayers) {
         this.mContext = mContext;
         this.mPlayers = mPlayers;
     }
 
-    public void notifyAdapter(List<Player> players) {
-        notifyItemInserted(mPlayers.size() - 1);
-    }
 
     @NonNull
     @Override
@@ -50,28 +51,30 @@ public class PlayersAdapter extends
     public void onBindViewHolder(@NonNull PlayersViewHolder holder, int position) {
         final Player player = mPlayers.get(position);
         holder.mPlayerNameTextView.setText(player.getName());
-        holder.mPlayerAgeTextView.setText(player.getAge());
-        holder.mPlayerPositionTextView.setText(player.getPosition());
+        holder.mPlayerAgeTextView.setText("Age: " + player.getAge());
+        holder.mPlayerPositionTextView.setText("Position: " + player.getPosition());
 
         if (player.getImage() != null) {
+
+            ByteArrayInputStream stream = new ByteArrayInputStream(player.getImage());
+            Log.d("player stream", stream.toString());
             Bitmap profileImage = BitmapFactory
-                    .decodeByteArray(player.getImage(), 0, player.getImage().length);
-            holder.mProfileImageView.setImageBitmap(profileImage);
+                    .decodeStream(stream);
+            if (profileImage != null) {
+//                Log.d("player photo", "photo present");
+                holder.mProfileImageView.setImageBitmap(profileImage);
+            }else  {
+                Log.d("player photo", "photo null");
+            }
         }
 
 
         holder.mEditImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//
-                Bundle bundle = new Bundle();
-                bundle.putString(PlayersAdapter.PLAYER_NAME, player.getName());
-                EditFragment editFragment = EditFragment.newInstance(EditFragment.class.getName());
-                Toast.makeText(mContext, "Username " + bundle.toString()
-                        , Toast.LENGTH_SHORT).show();
-                editFragment.setArguments(bundle);
-                FragmentManager fragmentManager = ((AppCompatActivity)mContext).getSupportFragmentManager();
-                editFragment.show(fragmentManager, PlayersAdapter.class.getSimpleName());
+                Intent intent = new Intent(mContext, EditPlayerActivity.class);
+                intent.putExtra(PlayersAdapter.PLAYER_NAME, player.getName());
+                mContext.startActivity(intent);
 
             }
         });

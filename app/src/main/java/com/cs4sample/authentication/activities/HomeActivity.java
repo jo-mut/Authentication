@@ -5,8 +5,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -20,11 +20,12 @@ import java.util.List;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener {
     private Toolbar mHomeToolbar;
-    private ImageView mImageView;
+    private ImageView mAddImageView;
     private RecyclerView mPlayerRecyclerView;
     private PlayersAdapter mPlayersAdapter;
     private List<Player> mPlayers = new ArrayList<>();
     private DatabaseManager mDatabaseManager;
+    private static final String ADD_PLAYER = "add player";
 
 
     @Override
@@ -33,21 +34,24 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_home);
         // initialize home views
         mHomeToolbar = findViewById(R.id.homeToolbar);
-        mImageView = findViewById(R.id.addImageView);
-        mHomeToolbar.setTitle(R.string.app_name);
+        mAddImageView = findViewById(R.id.addImageView);
+//        initialize click listeners
+        mAddImageView.setOnClickListener(this);
         // set support action bar
         setSupportActionBar(mHomeToolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        }
         // back button on toolbar
-        mHomeToolbar.setNavigationIcon(R.drawable.ic_left_arrow);
-        mHomeToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+//        mHomeToolbar.setNavigationIcon(R.drawable.ic_left_arrow);
+//        mHomeToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
 
         mPlayerRecyclerView = findViewById(R.id.playerRecyclerView);
-
         mDatabaseManager = new DatabaseManager(this);
         mPlayers = mDatabaseManager.getPlayers();
 
@@ -68,7 +72,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.addImageView) {
-
+            Intent intent = new Intent(HomeActivity.this, EditPlayerActivity.class);
+            intent.putExtra(HomeActivity.ADD_PLAYER, "add player");
+            startActivity(intent);
         }
+
     }
 }

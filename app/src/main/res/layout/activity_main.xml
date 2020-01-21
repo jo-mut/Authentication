@@ -23,6 +23,7 @@
             android:contentDescription="@string/logo" />
 
         <EditText
+            android:textSize="14sp"
             android:drawableStart="@drawable/ic_person"
             android:drawableLeft="@drawable/ic_person"
             android:drawablePadding="5dp"
@@ -36,6 +37,7 @@
             android:layout_height="wrap_content"/>
 
         <EditText
+            android:textSize="14sp"
             android:drawableStart="@drawable/ic_padlock"
             android:drawableLeft="@drawable/ic_padlock"
             android:layout_marginTop="10dp"
@@ -49,13 +51,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-        <CheckBox
-            android:padding="15dp"
+        <TextView
+            android:padding="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:textColor="@android:color/white"
-            android:id="@+id/rememberMeCheckBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/checkbox" />
+            android:text="@string/forgot_you_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
         <Button
             android:background="@drawable/login_button_background"
@@ -67,23 +70,43 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"/>
 
-        <Button
-            android:id="@+id/sigUpnButton"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/sign_up_button_background"
-            android:text="@string/sign_up"
-            android:textAllCaps="false"
-            android:textColor="@color/iconColor" />
 
-        <TextView
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="50dp"
-            android:textColor="@android:color/white"
-            android:text="@string/forgot_you_password"
+        <CheckBox
+            android:textColor="@color/iconColor"
+            android:layout_marginTop="5dp"
+            android:padding="5dp"
+            android:id="@+id/rememberCheckBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Remember me" />
+
+        <LinearLayout
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@android:color/white"
+                android:text="@string/dont_have"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:id="@+id/signUp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/colorPrimary"
+                android:text="@string/sign_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -97,11 +120,12 @@
         <ImageView
             app:srcCompat="@drawable/cslogo"
             android:layout_gravity="center_horizontal"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:contentDescription="@string/logo" />
 
         <TextView
+            android:textSize="12sp"
             android:layout_gravity="center_vertical"
             android:textColor="@android:color/white"
             android:text="@string/powered_by_capture_solutions"
