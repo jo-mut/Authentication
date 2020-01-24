@@ -67,8 +67,9 @@ public class MainActivity extends AppCompatActivity
     private static SharedPreferences.Editor mEditor;
     private static  String mUsername = "";
     private static  String mPassword = "";
-    private boolean mRemember = false;
-    private boolean mFirstLogin = false;
+    private static boolean mRemember = false;
+    private static boolean mFirstLogin = true;
+    private static boolean mSuccess = true;
 
 
 
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity
         mCheckBox = findViewById(R.id.rememberCheckBox);
         // initialize click listeners
         signInButton.setOnClickListener(this);
+        mCheckBox.setOnClickListener(this);
 
     }
 
@@ -103,51 +105,64 @@ public class MainActivity extends AppCompatActivity
         int id = view.getId();
         switch (id) {
             case R.id.signInButton:
-                String username = nameEditText.getText().toString().trim();
-                String password = passwordEditText.getText().toString().trim();
-                mPassword = password;
-                mUsername = username;
-                authenticateCredentials();
+                new AuthTask().execute();
+                if (mRemember){
+                    if (mFirstLogin){
+                        mUsername = nameEditText.getText().toString().trim();
+                        mPassword = passwordEditText.getText().toString().trim();
+                        logInAuthenticatedUser(mUsername, mPassword);
+                        loginToast();
+                    }else {
+                        logInAuthenticatedUser(mUsername, mPassword);
+                        loginToast();
+                    }
+                }else {
+                    if (mFirstLogin){
+                        mUsername = nameEditText.getText().toString().trim();
+                        mPassword = passwordEditText.getText().toString().trim();
+                        logInAuthenticatedUser(mUsername, mPassword);
+                        loginToast();
+                    }else {
+                        logInAuthenticatedUser(mUsername, mPassword);
+                        loginToast();
+                    }
+                }
                 break;
 
         }
+
+        if (id == R.id.rememberCheckBox) {
+            if (mCheckBox.isChecked()) {
+                mRemember = true;
+            }else {
+                mRemember = false;
+            }
+        }
     }
 
-    private void authenticateCredentials() {
-        signInButton.setBackgroundResource(R.drawable.ripple_effect_login_button);
-        new AuthTask().execute();
-
+    private void loginToast(){
+        if (mSuccess){
+            Toast.makeText(this, "Authentication success", Toast.LENGTH_SHORT).show();
+        }else {
+            Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void logInAuthenticatedUser(String username, String password) {
-        User user = mDatabaseManager.getUser(username, password);
-        if (!user.getUsername().equals(username) || !user.getPassword().equals(password)) {
-            Toast.makeText(this, "Authentication failed! Please check" +
-                    " your email and password again", Toast.LENGTH_SHORT).show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-//                    signInButton.setBackgroundResource(R.drawable.login_button_background);
-                }
-            }, 1000);
-        }else {
-            nameEditText.setText("");
-            passwordEditText.setText("");
-            Intent intent = new Intent(this, HomeActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        }
+        nameEditText.setText("");
+        passwordEditText.setText("");
+        signInButton.setBackgroundResource(R.drawable.ripple_effect_login_button);
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     public static class AuthTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-
             HttpURLConnection urlConnection = null;
-
             try {
-
                 JSONObject userObject = new JSONObject();
                 userObject.put("UserName", mUsername);
                 userObject.put("PassWord", mPassword);
@@ -160,19 +175,13 @@ public class MainActivity extends AppCompatActivity
                 mainObject.put("CurrentUser", userObject);
 
                 String address = "https://ciw.cs4africa.com/democmu/Administration/Login/Submit";
-                String authString = mUsername + ":" + mPassword;
-                String encoded = Base64.encodeToString(authString.getBytes(), Base64.DEFAULT);  //Java 8
 
                 URL url = new URL(address);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("POST");
-              //  urlConnection.setRequestProperty("Authorization", "Basic "+encoded);
                 urlConnection.setRequestProperty("Accept", "application/json");
                 urlConnection.setRequestProperty("Content-Type", "application/json");
-
-//                urlConnection.setDoInput(true);
                 urlConnection.setDoOutput(true);
-//                urlConnection.setChunkedStreamingMode(0);
 
                 OutputStream out = new BufferedOutputStream(urlConnection.getOutputStream());
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
@@ -182,16 +191,8 @@ public class MainActivity extends AppCompatActivity
                 BufferedReader rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 String line;
                 while ((line = rd.readLine()) != null) {
-                    Log.d("response token", urlConnection.getHeaderField("authorization"));
                     parseJsonObect(line);
-
                 }
-
-                ObjectInputStream obj = new ObjectInputStream(urlConnection.getInputStream());
-                Log.d("json obj", obj.toString());
-                Object object = obj.readObject();
-                Log.d("json object", object.toString());
-
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -205,28 +206,17 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void loginSharedPreferences() {
-        if (mFirstLogin) {
-            logInAuthenticatedUser(mUsername, mPassword);
-        }else {
-            if (mRemember) {
-                mEditor.putBoolean("remember", mRemember);
-                nameEditText.setText(mUsername);
-                passwordEditText.setText(mPassword);
-                logInAuthenticatedUser(mUsername, mPassword);
-            }else {
-                logInAuthenticatedUser(mUsername, mPassword);
-            }
-        }
 
 
+    public static void setPrefereces(String username, String password) {
+        mEditor.putString("username", username);
+        mEditor.putString("password", password);
+        mEditor.commit();
     }
 
     public static void parseJsonObect(String line)  {
-      try {
+        try {
           JSONObject mainJsonObject = new JSONObject(line);
-          Log.d("auth response line", line);
-          Log.d("auth response object", mainJsonObject.toString());
 //                String id = jsonObject.getString("id");
 //                String module_name = jsonObject.getString("ModuleName");
           String firstObect = mainJsonObject.getString("Result");
@@ -239,18 +229,20 @@ public class MainActivity extends AppCompatActivity
 //                String tb_id = secondObject.getString("id");
 //                String user_id = secondObject.getString("user_id");
           JSONObject secondJsonObject = new JSONObject(secondObject);
-          String username = secondJsonObject.getString("username");
-          String password = secondJsonObject.getString("password");
+          mUsername = secondJsonObject.getString("username");
+          mPassword = secondJsonObject.getString("password");
 //                String full_name = secondObject.getString("full_name");
 //                String account_id = secondObject.getString("account_id");
 //                String user_type = secondObject.getString("user_type_id");
 //                String status = secondObject.getString("status");
 //                String change_password = secondObject.getString("changed_password");
-
+          if (!TextUtils.isEmpty(mUsername) && !TextUtils.isEmpty(mPassword) && mFirstLogin){
+              setPrefereces(mUsername, mPassword);
+              mSuccess = true;
+          }
       }catch (JSONException e) {
           e.printStackTrace();
       }
-
     }
 
 }
