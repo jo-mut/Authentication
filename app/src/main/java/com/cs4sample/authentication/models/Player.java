@@ -12,7 +12,7 @@ public class Player {
     String name;
     String age;
     String position;
-    byte[] image;
+    String image;
 
     public Player() {
     }
@@ -49,11 +49,11 @@ public class Player {
         this.position = position;
     }
 
-    public byte[] getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(byte[] image) {
+    public void setImage(String image) {
         this.image = image;
     }
 }

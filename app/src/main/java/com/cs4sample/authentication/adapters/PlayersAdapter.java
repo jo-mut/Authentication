@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,18 +56,17 @@ public class PlayersAdapter extends
         holder.mPlayerAgeTextView.setText("Age: " + player.getAge());
         holder.mPlayerPositionTextView.setText("Position: " + player.getPosition());
 
-        if (player.getImage() != null) {
+        if (!TextUtils.isEmpty(player.getImage())) {
+            Log.d("player photo", player.getImage());
 
-            ByteArrayInputStream stream = new ByteArrayInputStream(player.getImage());
-            Log.d("player stream", stream.toString());
-            Bitmap profileImage = BitmapFactory
-                    .decodeStream(stream);
-            if (profileImage != null) {
-//                Log.d("player photo", "photo present");
-                holder.mProfileImageView.setImageBitmap(profileImage);
-            }else  {
-                Log.d("player photo", "photo null");
-            }
+//            byte[] image = Base64.decode(player.getImage().getBytes(), Base64.DEFAULT);
+//            Bitmap decodedByte = BitmapFactory.decodeByteArray(image, 0, image.length);
+//            if (decodedByte != null) {
+////                Log.d("player photo", "photo present");
+//                holder.mProfileImageView.setImageBitmap(decodedByte);
+//            }else  {
+//                Log.d("player photo", "photo null");
+//            }
         }
 
 

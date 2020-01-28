@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -76,9 +77,12 @@ public class EditPlayerActivity extends AppCompatActivity
         if (id == R.id.doneButton) {
             if (addPLayer != null) {
                 mDatabaseManager.savePlayer(getPlayer());
+                Toast.makeText(this, "save successful", Toast.LENGTH_SHORT).show();
             }else {
-                if (updatePlayer(playerUsername)) {
+                if (updatePlayer()) {
                     Toast.makeText(this, "Update successful", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
                 }else {
                     Toast.makeText(this, "Oops! Update failed", Toast.LENGTH_SHORT).show();
                 }
@@ -138,7 +142,6 @@ public class EditPlayerActivity extends AppCompatActivity
     private void getIntentExtras() {
         if (getIntent().getExtras() != null) {
             playerUsername = getIntent().getStringExtra(EditPlayerActivity.PLAYER_NAME);
-            addPLayer = getIntent().getStringExtra(EditPlayerActivity.PLAYER_NAME);
 
         }
     }
@@ -177,7 +180,8 @@ public class EditPlayerActivity extends AppCompatActivity
         }
 
         if (imageArray != null) {
-            mPlayer.setImage(imageArray);
+            String image = Base64.encodeToString(imageArray, Base64.DEFAULT);
+            mPlayer.setImage(image);
 
         }
 
@@ -188,7 +192,7 @@ public class EditPlayerActivity extends AppCompatActivity
         return mPlayer;
     }
 
-    private boolean updatePlayer(String username) {
+    private boolean updatePlayer() {
         mPlayer = new Player();
         String name = nameEditText.getText().toString().trim();
         String position = positionEditText.getText().toString().trim();
@@ -208,7 +212,8 @@ public class EditPlayerActivity extends AppCompatActivity
         }
 
         if (imageArray != null) {
-            mPlayer.setImage(imageArray);
+            String image = Base64.encodeToString(imageArray, Base64.DEFAULT);
+            mPlayer.setImage(image);
 
         }
 
@@ -217,7 +222,7 @@ public class EditPlayerActivity extends AppCompatActivity
         positionEditText.setText("");
         profileImageView.setImageBitmap(null);
         finish();
-        return mDatabaseManager.updatePlayer(username, mPlayer);
+        return mDatabaseManager.updatePlayer(playerUsername, mPlayer);
     }
 
 }

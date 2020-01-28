@@ -1,6 +1,7 @@
 package com.cs4sample.authentication.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.Context;
@@ -67,11 +68,9 @@ public class MainActivity extends AppCompatActivity
     private static SharedPreferences.Editor mEditor;
     private static  String mUsername = "";
     private static  String mPassword = "";
-    private static boolean mRemember = false;
-    private static boolean mFirstLogin = true;
-    private static boolean mSuccess = true;
-
-
+    private static boolean mRemember;
+    private static boolean mFirstLogin;
+    private static boolean mSuccess;
 
 
     @Override
@@ -85,10 +84,8 @@ public class MainActivity extends AppCompatActivity
         mSharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
         mEditor = mSharedPreferences.edit();
         // read shared preferences
-        mFirstLogin = mSharedPreferences.getBoolean("firstLogin", false);
-        mRemember = mSharedPreferences.getBoolean("remember", false);
-        mUsername = mSharedPreferences.getString("username", null);
-        mPassword = mSharedPreferences.getString("password", null);
+        mFirstLogin = mSharedPreferences.getBoolean("firstLogin", true);
+
         // find fragment views
         nameEditText = findViewById(R.id.nameEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
@@ -98,6 +95,17 @@ public class MainActivity extends AppCompatActivity
         signInButton.setOnClickListener(this);
         mCheckBox.setOnClickListener(this);
 
+        if (mCheckBox.isChecked()){
+            mRemember = true;
+        }
+
+        if (mRemember && !mFirstLogin){
+            mUsername = mSharedPreferences.getString("username", null);
+            mPassword = mSharedPreferences.getString("password", null);
+            nameEditText.setText(mUsername);
+            passwordEditText.setText(mPassword);
+        }
+
     }
 
     @Override
@@ -105,28 +113,24 @@ public class MainActivity extends AppCompatActivity
         int id = view.getId();
         switch (id) {
             case R.id.signInButton:
-                new AuthTask().execute();
-                if (mRemember){
-                    if (mFirstLogin){
+                if (!mRemember) {
+                    if (mFirstLogin) {
                         mUsername = nameEditText.getText().toString().trim();
                         mPassword = passwordEditText.getText().toString().trim();
-                        logInAuthenticatedUser(mUsername, mPassword);
-                        loginToast();
                     }else {
-                        logInAuthenticatedUser(mUsername, mPassword);
-                        loginToast();
+                        mUsername = nameEditText.getText().toString().trim();
+                        mPassword = passwordEditText.getText().toString().trim();
                     }
                 }else {
-                    if (mFirstLogin){
+                    if (mFirstLogin) {
                         mUsername = nameEditText.getText().toString().trim();
                         mPassword = passwordEditText.getText().toString().trim();
-                        logInAuthenticatedUser(mUsername, mPassword);
-                        loginToast();
-                    }else {
-                        logInAuthenticatedUser(mUsername, mPassword);
-                        loginToast();
                     }
                 }
+                new AuthTask(MainActivity.this).execute();
+                nameEditText.setText("");
+                passwordEditText.setText("");
+//                signInButton.setBackgroundResource(R.drawable.ripple_effect_login_button);
                 break;
 
         }
@@ -140,27 +144,20 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void loginToast(){
-        if (mSuccess){
-            Toast.makeText(this, "Authentication success", Toast.LENGTH_SHORT).show();
-        }else {
-            Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void logInAuthenticatedUser(String username, String password) {
-        nameEditText.setText("");
-        passwordEditText.setText("");
-        signInButton.setBackgroundResource(R.drawable.ripple_effect_login_button);
-        Intent intent = new Intent(this, HomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
 
     public static class AuthTask extends AsyncTask<Void, Void, Void> {
+        private Context mContext;
+
+        private AuthTask(Context context) {
+            this.mContext = context;
+        }
+
         @Override
         protected Void doInBackground(Void... voids) {
+            Log.d("response username", mUsername);
+            Log.d("response username", mPassword);
+
+
             HttpURLConnection urlConnection = null;
             try {
                 JSONObject userObject = new JSONObject();
@@ -191,7 +188,8 @@ public class MainActivity extends AppCompatActivity
                 BufferedReader rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
                 String line;
                 while ((line = rd.readLine()) != null) {
-                    parseJsonObect(line);
+                    Log.d("response line", line);
+                    parseJsonObect(line, mContext);
                 }
 
             } catch (Exception e) {
@@ -204,17 +202,38 @@ public class MainActivity extends AppCompatActivity
 
             return null;
         }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            loginUser(mContext);
+        }
     }
 
 
+    private static void loginUser(Context context) {
+        if (mSuccess){
+            Toast.makeText(context, "Authentication success", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(context, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            context.startActivity(intent);
+        }else {
+            Toast.makeText(context, "Authentication failed", Toast.LENGTH_SHORT).show();
+        }
+    }
 
-    public static void setPrefereces(String username, String password) {
+    public static void setNamePasswordToPrefereces(String username, String password) {
         mEditor.putString("username", username);
         mEditor.putString("password", password);
         mEditor.commit();
     }
 
-    public static void parseJsonObect(String line)  {
+    public static void parseJsonObect(String line, Context context)  {
         try {
           JSONObject mainJsonObject = new JSONObject(line);
 //                String id = jsonObject.getString("id");
@@ -229,20 +248,33 @@ public class MainActivity extends AppCompatActivity
 //                String tb_id = secondObject.getString("id");
 //                String user_id = secondObject.getString("user_id");
           JSONObject secondJsonObject = new JSONObject(secondObject);
-          mUsername = secondJsonObject.getString("username");
-          mPassword = secondJsonObject.getString("password");
+          String username = secondJsonObject.getString("username");
+          String password = secondJsonObject.getString("password");
 //                String full_name = secondObject.getString("full_name");
 //                String account_id = secondObject.getString("account_id");
 //                String user_type = secondObject.getString("user_type_id");
 //                String status = secondObject.getString("status");
 //                String change_password = secondObject.getString("changed_password");
-          if (!TextUtils.isEmpty(mUsername) && !TextUtils.isEmpty(mPassword) && mFirstLogin){
-              setPrefereces(mUsername, mPassword);
+          if (!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)){
               mSuccess = true;
+              if (mFirstLogin) {
+                  mEditor.putBoolean("firstLogin", false);
+                  mEditor.commit();
+              }
+      }else {
+              mSuccess = false;
           }
+
+          if (mRemember) {
+              setNamePasswordToPrefereces(mUsername, mPassword);
+          }else {
+              setNamePasswordToPrefereces(mUsername, mPassword);
+          }
+
       }catch (JSONException e) {
           e.printStackTrace();
       }
-    }
+        loginUser(context);
 
+    }
 }

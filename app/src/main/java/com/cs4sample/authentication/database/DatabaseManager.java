@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 
 import com.cs4sample.authentication.models.Player;
@@ -22,7 +23,7 @@ public class DatabaseManager {
     // The name of the players tables
     public static final String PLAYERS_TB = "players_tb";
     // The version of the database
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     // The id of the user
     public static final String ROW_ID = "_id";
     // The username of the user
@@ -77,7 +78,8 @@ public class DatabaseManager {
         }
 
         if (player.getImage() != null) {
-            mContentValues.put(Player.ROW_IMAGE, player.getImage());
+            String image = Base64.encodeToString(player.getImage().getBytes(), Base64.DEFAULT);
+            mContentValues.put(Player.ROW_IMAGE, image);
         }
 
 
@@ -148,7 +150,7 @@ public class DatabaseManager {
                 player.setAge(cursor.getString(cursor.getColumnIndexOrThrow(Player.ROW_AGE)));
                 player.setName(cursor.getString(cursor.getColumnIndexOrThrow(Player.ROW_NAME)));
                 player.setPosition(cursor.getString(cursor.getColumnIndexOrThrow(Player.ROW_POSITION)));
-                player.setImage(cursor.getBlob(cursor.getColumnIndexOrThrow(Player.ROW_POSITION)));
+                player.setImage(cursor.getString(cursor.getColumnIndexOrThrow(Player.ROW_POSITION)));
                 players.add(player);
 
 
@@ -162,6 +164,7 @@ public class DatabaseManager {
     }
 
     public boolean updatePlayer(String name, Player player) {
+        Log.d("update player image", player.getImage());
 
         mContentValues = new ContentValues();
         mContentValues.put(Player.ROW_IMAGE, player.getImage());
@@ -178,8 +181,10 @@ public class DatabaseManager {
             mContentValues.put(Player.ROW_POSITION, player.getPosition());
         }
 
-        if (player.getImage() != null) {
-            mContentValues.put(Player.ROW_IMAGE, player.getImage());
+        if (!TextUtils.isEmpty(player.getImage())) {
+            String image = Base64.encodeToString(player.getImage().getBytes(), Base64.DEFAULT);
+            Log.d("update player image", image);
+            mContentValues.put(Player.ROW_IMAGE, image);
         }
 
         String whereClause = Player.ROW_NAME + "=?";
