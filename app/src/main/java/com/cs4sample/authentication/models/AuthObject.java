@@ -1,11 +1,11 @@
 package com.cs4sample.authentication.models;
 
-public class MainObject {
+public class AuthObject {
     private String id;
-    private FirstObject firstObject;
+    private FirstAuthObject firstAuthObject;
     private User user;
 
-    public MainObject() {
+    public AuthObject() {
     }
 
     public String getId() {
@@ -16,12 +16,12 @@ public class MainObject {
         this.id = id;
     }
 
-    public FirstObject getFirstObject() {
-        return firstObject;
+    public FirstAuthObject getFirstAuthObject() {
+        return firstAuthObject;
     }
 
-    public void setFirstObject(FirstObject firstObject) {
-        this.firstObject = firstObject;
+    public void setFirstAuthObject(FirstAuthObject firstAuthObject) {
+        this.firstAuthObject = firstAuthObject;
     }
 
     public User getUser() {

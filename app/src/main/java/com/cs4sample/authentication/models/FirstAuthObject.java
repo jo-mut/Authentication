@@ -1,11 +1,11 @@
 package com.cs4sample.authentication.models;
 
-public class FirstObject {
+public class FirstAuthObject {
     String id;
     boolean isOkay;
     String message;
 
-    public FirstObject() {
+    public FirstAuthObject() {
     }
 
     public String getId() {

@@ -78,8 +78,7 @@ public class DatabaseManager {
         }
 
         if (player.getImage() != null) {
-            String image = Base64.encodeToString(player.getImage().getBytes(), Base64.DEFAULT);
-            mContentValues.put(Player.ROW_IMAGE, image);
+            mContentValues.put(Player.ROW_IMAGE, player.getImage());
         }
 
 
@@ -150,7 +149,7 @@ public class DatabaseManager {
                 player.setAge(cursor.getString(cursor.getColumnIndexOrThrow(Player.ROW_AGE)));
                 player.setName(cursor.getString(cursor.getColumnIndexOrThrow(Player.ROW_NAME)));
                 player.setPosition(cursor.getString(cursor.getColumnIndexOrThrow(Player.ROW_POSITION)));
-                player.setImage(cursor.getString(cursor.getColumnIndexOrThrow(Player.ROW_POSITION)));
+                player.setImage(cursor.getString(cursor.getColumnIndexOrThrow(Player.ROW_IMAGE)));
                 players.add(player);
 
 
@@ -164,7 +163,6 @@ public class DatabaseManager {
     }
 
     public boolean updatePlayer(String name, Player player) {
-        Log.d("update player image", player.getImage());
 
         mContentValues = new ContentValues();
         mContentValues.put(Player.ROW_IMAGE, player.getImage());
@@ -182,9 +180,8 @@ public class DatabaseManager {
         }
 
         if (!TextUtils.isEmpty(player.getImage())) {
-            String image = Base64.encodeToString(player.getImage().getBytes(), Base64.DEFAULT);
-            Log.d("update player image", image);
-            mContentValues.put(Player.ROW_IMAGE, image);
+            Log.d("successful update", player.getImage());
+            mContentValues.put(Player.ROW_IMAGE, player.getImage());
         }
 
         String whereClause = Player.ROW_NAME + "=?";

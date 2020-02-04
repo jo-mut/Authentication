@@ -57,16 +57,13 @@ public class PlayersAdapter extends
         holder.mPlayerPositionTextView.setText("Position: " + player.getPosition());
 
         if (!TextUtils.isEmpty(player.getImage())) {
-            Log.d("player photo", player.getImage());
+            //decode base64 string to image
+            byte[] imageBytes = Base64.decode(player.getImage(), Base64.DEFAULT);
+            String decodedPath = new String(imageBytes);
+            Bitmap bitmap = BitmapFactory.decodeFile(decodedPath);
+            holder.mProfileImageView.setImageBitmap(bitmap);
 
-//            byte[] image = Base64.decode(player.getImage().getBytes(), Base64.DEFAULT);
-//            Bitmap decodedByte = BitmapFactory.decodeByteArray(image, 0, image.length);
-//            if (decodedByte != null) {
-////                Log.d("player photo", "photo present");
-//                holder.mProfileImageView.setImageBitmap(decodedByte);
-//            }else  {
-//                Log.d("player photo", "photo null");
-//            }
+
         }
 
 
@@ -84,6 +81,6 @@ public class PlayersAdapter extends
 
     @Override
     public int getItemCount() {
-        return mPlayers.size() - 1;
+        return mPlayers.size();
     }
 }

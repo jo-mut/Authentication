@@ -14,6 +14,8 @@ import com.cs4sample.authentication.R;
 import com.cs4sample.authentication.adapters.PlayersAdapter;
 import com.cs4sample.authentication.database.DatabaseManager;
 import com.cs4sample.authentication.models.Player;
+import com.cs4sample.authentication.services.GeneralDataService;
+import com.cs4sample.authentication.services.LoginService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,8 +58,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         mPlayers = mDatabaseManager.getPlayers();
 
         setRecyclerView();
-
+        new GeneralDataService.GeneralTask(this, LoginService.AUTH_TOKEN).execute();
     }
+
+
 
     private void setRecyclerView() {
         mPlayersAdapter = new PlayersAdapter(this, mPlayers);

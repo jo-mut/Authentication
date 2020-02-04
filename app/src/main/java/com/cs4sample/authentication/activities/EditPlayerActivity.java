@@ -3,11 +3,11 @@ package com.cs4sample.authentication.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,10 +24,13 @@ import android.widget.Toast;
 import com.cs4sample.authentication.R;
 import com.cs4sample.authentication.database.DatabaseManager;
 import com.cs4sample.authentication.models.Player;
-import com.cs4sample.authentication.models.User;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class EditPlayerActivity extends AppCompatActivity
         implements View.OnClickListener {
@@ -39,10 +42,10 @@ public class EditPlayerActivity extends AppCompatActivity
     private Button doneButton;
     private DatabaseManager mDatabaseManager;
     private static final int PICK_IMAGE = 111;
-    private byte[] imageArray = null;
     private String playerUsername;
     private String addPLayer;
     private Player mPlayer;
+    private String encodedPath;
     private static final String PLAYER_NAME = Player.ROW_NAME;
 
     @Override
@@ -81,7 +84,7 @@ public class EditPlayerActivity extends AppCompatActivity
             }else {
                 if (updatePlayer()) {
                     Toast.makeText(this, "Update successful", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(this, MainActivity.class);
+                    Intent intent = new Intent(this, HomeActivity.class);
                     startActivity(intent);
                 }else {
                     Toast.makeText(this, "Oops! Update failed", Toast.LENGTH_SHORT).show();
@@ -104,32 +107,26 @@ public class EditPlayerActivity extends AppCompatActivity
         if (resultCode == RESULT_OK) {
             if (requestCode == PICK_IMAGE) {
                 Uri uri = data.getData();
-                Bitmap bitmap = null;
+                byte[] bytes = null;
                 try {
-
-                    if (Build.VERSION.SDK_INT >= 29) {
-                        ImageDecoder.Source source = ImageDecoder
-                                .createSource(this.getContentResolver(), uri);
-                        bitmap = ImageDecoder.decodeBitmap(source);
-                        profileImageView.setImageBitmap(bitmap);
-                        imageArray = getPhotoBitmap(bitmap);
-                    }else {
-                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
-                        profileImageView.setImageBitmap(bitmap);
-                        imageArray = getPhotoBitmap(bitmap);
-
-                    }
-
-                } catch (IOException e) {
+                    ContentResolver cr = getBaseContext().getContentResolver();
+                    InputStream inputStream = cr.openInputStream(uri);
+                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    bytes = baos.toByteArray();
+                } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-
+//                savePhotoToFolder(uri);
+                saveReceivedImage(uri, String.valueOf(System.currentTimeMillis()));
             }
 
         }
 
 
     }
+
 
     private void setToolbarTitle() {
         if (addPLayer != null) {
@@ -144,20 +141,6 @@ public class EditPlayerActivity extends AppCompatActivity
             playerUsername = getIntent().getStringExtra(EditPlayerActivity.PLAYER_NAME);
 
         }
-    }
-
-    private byte[] getPhotoBitmap(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        byte[] imageArray = baos.toByteArray();
-        try {
-            baos.close();
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return imageArray;
-
     }
 
     public Player getPlayer() {
@@ -179,9 +162,8 @@ public class EditPlayerActivity extends AppCompatActivity
             mPlayer.setAge(age);
         }
 
-        if (imageArray != null) {
-            String image = Base64.encodeToString(imageArray, Base64.DEFAULT);
-            mPlayer.setImage(image);
+        if (!TextUtils.isEmpty(encodedPath)) {
+            mPlayer.setImage(encodedPath);
 
         }
 
@@ -211,10 +193,8 @@ public class EditPlayerActivity extends AppCompatActivity
             mPlayer.setAge(age);
         }
 
-        if (imageArray != null) {
-            String image = Base64.encodeToString(imageArray, Base64.DEFAULT);
-            mPlayer.setImage(image);
-
+        if (!TextUtils.isEmpty(encodedPath)) {
+            mPlayer.setImage(encodedPath);
         }
 
         nameEditText.setText("");
@@ -225,4 +205,45 @@ public class EditPlayerActivity extends AppCompatActivity
         return mDatabaseManager.updatePlayer(playerUsername, mPlayer);
     }
 
+    private void saveReceivedImage(Uri uri, String imageName){
+        try {
+            Bitmap bitmap = null;
+            if (Build.VERSION.SDK_INT >= 29) {
+                ImageDecoder.Source source = ImageDecoder
+                        .createSource(this.getContentResolver(), uri);
+                bitmap = ImageDecoder.decodeBitmap(source);
+                profileImageView.setImageBitmap(bitmap);
+            }else {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(),uri);
+                profileImageView.setImageBitmap(bitmap);
+            }
+
+            File path = new File(this.getFilesDir(), "Auth" + File.separator + "Images");
+            if(!path.exists()){
+                path.mkdirs();
+            }
+            File outFile = new File(path, imageName + ".jpeg");
+            FileOutputStream outputStream = new FileOutputStream(outFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            outputStream.close();
+            encodePath(outFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void encodePath(File file) {
+        encodedPath = Base64.encodeToString(file.getPath().getBytes(), Base64.DEFAULT);
+//        Log.d("successful path", encodedPath);
+//        byte[] imageBytes = Base64.decode(encodedPath, Base64.DEFAULT);
+//        String decodedPath = new String(imageBytes);
+//        if (decodedPath != null) {
+//            Log.d("decoded path", decodedPath);
+//        }else  {
+//            Log.d("decoded path", "photo null");
+//        }
+
+    }
 }

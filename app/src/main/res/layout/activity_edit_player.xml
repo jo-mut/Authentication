@@ -24,21 +24,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.cardview.widget.CardView
-            android:layout_gravity="center_horizontal"
-            android:layout_margin="5dp"
-            app:cardCornerRadius="100dp"
+        <ImageView
+            android:id="@+id/profileImageView"
             android:layout_width="100dp"
-            android:layout_height="100dp">
-
-            <ImageView
-                app:srcCompat="@drawable/ic_account_circle_24px"
-                android:id="@+id/profileImageView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/todo" />
-
-        </androidx.cardview.widget.CardView>
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="@string/todo"
+            app:srcCompat="@drawable/ic_barcelona" />
 
         <EditText
             android:drawableStart="@drawable/ic_person"
