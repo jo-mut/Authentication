@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="50dp"
+    tools:context=".fragments.FirstDetailFragment">
+
+    <LinearLayout
+        android:layout_margin="20dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:hint="SURNAME"
+            android:background="@drawable/ic_rounded_rectangle_outline"
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:padding="10dp"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/darker_gray"
+            android:id="@+id/surnameEditText"
+            android:layout_width="0dp"
+            android:layout_weight="50"
+            android:layout_height="45dp"/>
+
+        <EditText
+            android:hint="OTHER NAMES"
+            android:background="@drawable/ic_rounded_rectangle_outline"
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:padding="10dp"
+            android:textAllCaps="true"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/darker_gray"
+            android:id="@+id/otherEditText"
+            android:layout_width="0dp"
+            android:layout_weight="50"
+            android:layout_height="45dp"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:text=""
+        android:hint="ID NUMBER"
+        android:background="@drawable/ic_rounded_rectangle_outline"
+        android:padding="10dp"
+        android:layout_margin="20dp"
+        android:textAllCaps="true"
+        android:textSize="14sp"
+        android:inputType="number"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/darker_gray"
+        android:id="@+id/idNumberEditText"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"/>
+
+    <EditText
+        android:hint="DATE OF BIRTH"
+        android:background="@drawable/ic_rounded_rectangle_outline"
+        android:padding="10dp"
+        android:layout_margin="20dp"
+        android:textAllCaps="true"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/darker_gray"
+        android:id="@+id/dateOfBirthEditText"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"/>
+
+</LinearLayout>

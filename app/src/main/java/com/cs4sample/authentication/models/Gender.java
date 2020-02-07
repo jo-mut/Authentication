@@ -2,7 +2,6 @@ package com.cs4sample.authentication.models;
 
 public class Gender {
     int id;
-    String $id;
     String genderName;
     String genderCharacter;
 
@@ -15,14 +14,6 @@ public class Gender {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String get$id() {
-        return $id;
-    }
-
-    public void set$id(String $id) {
-        this.$id = $id;
     }
 
     public String getGenderName() {

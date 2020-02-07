@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity
     private static  String mPassword = "";
     private static boolean mRemember;
     private static boolean mFirstLogin;
-    private static boolean mSuccess;
+//    private static boolean mSuccess;
 
 
     @Override
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         int id = view.getId();
         switch (id) {
             case R.id.signInButton:
-                loginInUser(this);
+                loginInUser();
                 break;
 
         }
@@ -107,15 +107,10 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void loginInUser(Context context) {
+    private void loginInUser() {
         if (!mRemember) {
-            if (mFirstLogin) {
-                mUsername = nameEditText.getText().toString().trim();
-                mPassword = passwordEditText.getText().toString().trim();
-            }else {
-                mUsername = nameEditText.getText().toString().trim();
-                mPassword = passwordEditText.getText().toString().trim();
-            }
+            mUsername = nameEditText.getText().toString().trim();
+            mPassword = passwordEditText.getText().toString().trim();
         }else {
             if (mFirstLogin) {
                 mUsername = nameEditText.getText().toString().trim();
@@ -132,29 +127,21 @@ public class MainActivity extends AppCompatActivity
             String username = LoginService.loginMap.get("username");
             String password = LoginService.loginMap.get("password");
 
-//            Log.d("successful name", username);
-//            Log.d("successful pas", password);
-            mSuccess = true;
-
-            Log.d("successful login", mSuccess  +"");
-            if (mSuccess){
-                if (mFirstLogin){
-                    mEditor.putBoolean("firstLogin", false);
-                    mEditor.commit();
-                }
-                if (mRemember) {
-                    mEditor.putString("username", mUsername);
-                    mEditor.putString("password", mPassword);
-                    mEditor.commit();
-                }
-                Toast.makeText(context, "Authentication success", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(context, HomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                context.startActivity(intent);
-            }else {
-                Toast.makeText(context, "Authentication failed", Toast.LENGTH_SHORT).show();
+            if (mFirstLogin){
+                mEditor.putBoolean("firstLogin", false);
+                mEditor.commit();
             }
-
+            if (mRemember) {
+                mEditor.putString("username", mUsername);
+                mEditor.putString("password", mPassword);
+                mEditor.commit();
+            }
+            Toast.makeText(this, "Authentication success", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, SynchronizeDataActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            this.startActivity(intent);
+        }else {
+            Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show();
         }
 
     }

@@ -1,25 +1,19 @@
 package com.cs4sample.authentication.models;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main{
-    int id;
     boolean isOkay;
     String $id;
     String message;
-    List<GeneralData> results;
+    String results;
 
     public Main() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String get$id() {
@@ -46,11 +40,44 @@ public class Main{
         this.message = message;
     }
 
-    public List<GeneralData> getResults() {
+    public String getResults() {
         return results;
     }
 
-    public void setResults(List<GeneralData> results) {
+    public void setResults(String results) {
         this.results = results;
+    }
+
+    public static Main fromJson(JSONObject jsonObject) {
+        Main main = new Main();
+        try {
+            if (jsonObject != null) {
+                main.$id = jsonObject.getString("$id");
+                main.isOkay = jsonObject.getBoolean("IsOkay");
+                main.message = jsonObject.getString("Message");
+                main.results = jsonObject.getString("Result");
+            }
+        }catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return main;
+    }
+
+    public static List<Main> fromJsonArray(JSONArray jsonArray) {
+        List<Main> mainList = new ArrayList<>(jsonArray.length());
+        for (int i = 0; i <jsonArray.length(); i++) {
+            Main main = null;
+            try {
+                main = fromJson(jsonArray.getJSONObject(i));
+                if (main != null) {
+                    mainList.add(main);
+                }
+            }catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return mainList;
     }
 }

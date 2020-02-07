@@ -5,13 +5,17 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.cs4sample.authentication.models.Gender;
 import com.cs4sample.authentication.models.Player;
 import com.cs4sample.authentication.models.User;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseManager {
     // Context Object
@@ -23,7 +27,7 @@ public class DatabaseManager {
     // The name of the players tables
     public static final String PLAYERS_TB = "players_tb";
     // The version of the database
-    public static final int DATABASE_VERSION = 3;
+    public static final int DATABASE_VERSION = 4;
     // The id of the user
     public static final String ROW_ID = "_id";
     // The username of the user
@@ -53,10 +57,9 @@ public class DatabaseManager {
 
     }
 
-    private ContentValues prepareContentValues(User user) {
+    public ContentValues prepareContentValues(JSONObject object) {
         mContentValues = new ContentValues();
-        mContentValues.put(DatabaseManager.ROW_USERNAME, user.getUsername());
-        mContentValues.put(DatabaseManager.ROW_PASSWORD, user.getPassword());
+
 
         return mContentValues;
     }
@@ -151,8 +154,6 @@ public class DatabaseManager {
                 player.setPosition(cursor.getString(cursor.getColumnIndexOrThrow(Player.ROW_POSITION)));
                 player.setImage(cursor.getString(cursor.getColumnIndexOrThrow(Player.ROW_IMAGE)));
                 players.add(player);
-
-
             }
             cursor.close();
         }
@@ -190,6 +191,55 @@ public class DatabaseManager {
         long result = mSQLiteDatabase.update(Player.PLAYER_TB, mContentValues, whereClause, whereArgs);
 
         return result > 0;
+    }
+
+    /**Loop through the returned listof genders building a content value
+     * and saving the data to the database*/
+    public List<ContentValues> getGenderList(List<Gender> genders) {
+        List<ContentValues> contentValues = new ArrayList<>();
+        if (genders != null) {
+            for (Gender g: genders) {
+                if (saveGender(g)) {
+                    Toast.makeText(mContext, "Saved successfully", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(mContext, "Failed to save", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        return contentValues;
+    }
+
+    /**Save gender list into the database*/
+    public boolean saveGender(Gender g) {
+        mContentValues = new ContentValues();
+        mContentValues.put(DatabaseSchema.ROW_ID, g.getId());
+        mContentValues.put(DatabaseSchema.GENDER_NAME, g.getGenderCharacter());
+        mContentValues.put(DatabaseSchema.GENDER_CHARACTER, g.getGenderCharacter());
+        mSQLiteDatabase = mSQLiteHelper.getWritableDatabase();
+        long result = mSQLiteDatabase.insert(DatabaseSchema.GENDER_TB, null,mContentValues);
+
+        return result > 0;
+    }
+
+    public List<Gender> getGenderList() {
+        List<Gender> genders = new ArrayList<>();
+        this.mSQLiteDatabase = mSQLiteHelper.getReadableDatabase();
+        Cursor cursor = mSQLiteDatabase.query(DatabaseSchema.GENDER_TB, null,
+                null, null, null, null, null, null);
+
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                Gender gender = new Gender();
+                gender.setId(cursor.getInt(cursor.getColumnIndexOrThrow(DatabaseSchema.ROW_ID)));
+                gender.setGenderName(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseSchema.GENDER_NAME)));
+                gender.setGenderCharacter(cursor.getString(cursor.getColumnIndexOrThrow(DatabaseSchema.GENDER_CHARACTER)));
+                genders.add(gender);
+            }
+            cursor.close();
+        }
+
+        return genders;
+
     }
 
 }

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".fragments.ThirdDetailFragment">
+
+    <TextView
+        android:layout_margin="10dp"
+        android:layout_gravity="center_horizontal"
+        android:padding="10dp"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:id="@+id/profilePhotoTextView"
+        android:text="PROFILE PHOTO"
+        android:layout_width="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_height="wrap_content"/>
+
+    <ImageView
+        android:background="@drawable/ic_rounded_rectangle_outline"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/profileImageView"
+        android:scaleType="centerCrop"
+        android:layout_width="150dp"
+        android:layout_height="150dp"/>
+
+    <TextView
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:text="PHOTOS OF ID"
+        android:layout_width="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="50"
+            android:layout_width="0dp"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:padding="10dp"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:text="ID FRONT"
+                android:layout_width="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:background="@drawable/ic_rounded_rectangle_outline"
+                android:scaleType="centerCrop"
+                android:id="@+id/idFrontImageView"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginLeft="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_weight="50"
+            android:layout_width="0dp"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="10dp"
+                android:padding="10dp"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:text="ID BACK"
+                android:layout_width="wrap_content"
+                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_height="wrap_content"/>
+
+            <ImageView
+                android:background="@drawable/ic_rounded_rectangle_outline"
+                android:scaleType="centerCrop"
+                android:id="@+id/idBackImageView"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:layout_margin="10dp"
+        android:textColor="@color/iconColor"
+        android:background="@drawable/accent_background"
+        android:layout_marginTop="10dp"
+        android:id="@+id/nextPageButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit" />
+
+</LinearLayout>

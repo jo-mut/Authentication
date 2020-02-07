@@ -12,8 +12,8 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            app:srcCompat="@drawable/ic_barcelona"
-            android:id="@+id/flagImageView"
+            app:srcCompat="@android:color/transparent"
+            android:id="@+id/profileImageView"
             android:layout_width="50dp"
             android:layout_height="50dp"/>
 
@@ -30,14 +30,22 @@
             android:text=""
             android:textColor="@android:color/black"
             android:textSize="16sp"
-            android:id="@+id/countryNameTextView"
+            android:id="@+id/nameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <TextView
             android:text=""
             android:textColor="@android:color/black"
-            android:textSize="14sp"
+            android:textSize="12sp"
+            android:id="@+id/idTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text=""
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
             android:id="@+id/codeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
