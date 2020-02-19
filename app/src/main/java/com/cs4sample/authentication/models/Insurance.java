@@ -1,8 +1,7 @@
 package com.cs4sample.authentication.models;
 
 public class Insurance {
-    int id;
-    String $id;
+    String id;
     String type;
     String code;
     String contributorId;
@@ -10,19 +9,12 @@ public class Insurance {
     public Insurance() {
     }
 
-    public String get$id() {
-        return $id;
-    }
 
-    public void set$id(String $id) {
-        this.$id = $id;
-    }
-
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

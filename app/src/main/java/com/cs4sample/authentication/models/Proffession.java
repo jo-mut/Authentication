@@ -20,16 +20,6 @@ public class Proffession extends GeneralDataBaseClass {
     }
 
     @Override
-    public String get$id() {
-        return $id;
-    }
-
-    @Override
-    public void set$id(String $id) {
-        this.$id = $id;
-    }
-
-    @Override
     public String getId() {
         return id;
     }

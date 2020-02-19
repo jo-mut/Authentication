@@ -12,9 +12,9 @@
         android:id="@+id/homeToolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:theme="@style/AppTheme"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:titleTextColor="@color/iconColor"
-        app:contentInsetStart="0dp"
+        app:contentInsetStart="20dp"
         app:contentInsetLeft="0dp"
         android:background="@color/colorPrimary"/>
 

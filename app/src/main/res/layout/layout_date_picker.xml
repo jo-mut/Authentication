@@ -12,11 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:calendarViewShown="false"
-        android:datePickerMode="spinner"/>
+        android:datePickerMode="calendar"/>
 
     <Button
         android:textAllCaps="false"
-        android:textColor="@color/iconColor"
+        android:textColor="@android:color/black"
         android:background="@drawable/ic_rounded_rectangle_outline"
         android:layout_marginTop="10dp"
         android:id="@+id/setDateButton"

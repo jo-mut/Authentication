@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.cs4sample.authentication.Constants;
+import com.cs4sample.authentication.interfaces.LoginListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,6 +17,7 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -27,14 +29,17 @@ public class LoginService  {
     public static String AUTH_TOKEN = "";
 
     public static class AuthTask extends AsyncTask<Void, Void, Void> {
-        private Context mContext;
         private String mUsername;
         private String mPassword;
+        private LoginListener loginListener;
+        private static WeakReference<Context> mContext;
+
 
         public AuthTask(Context context, String username, String password) {
-            this.mContext = context;
+            mContext = new  WeakReference<>(context);
             this.mUsername = username;
             this.mPassword = password;
+            loginListener = (LoginListener) mContext.get();
         }
 
         @Override
@@ -100,8 +105,13 @@ public class LoginService  {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            loginListener.loginListener(AUTH_TOKEN);
 
         }
+    }
+
+    public static LoginListener setLoginlListener(LoginListener loginlListener) {
+        return loginlListener;
     }
 
     // return username and the password the successuflly logged in the user
@@ -109,8 +119,8 @@ public class LoginService  {
 
         try {
             JSONObject mainJsonObject = new JSONObject(line);
-            String firstObect = mainJsonObject.getString("Result");
-            JSONObject firstJsonObject = new JSONObject(firstObect);
+            String firstObject = mainJsonObject.getString("Result");
+            JSONObject firstJsonObject = new JSONObject(firstObject);
             String secondObject = firstJsonObject.getString("Result");
             JSONObject secondJsonObject = new JSONObject(secondObject);
             String username = secondJsonObject.getString("username");

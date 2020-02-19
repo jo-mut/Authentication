@@ -6,6 +6,10 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="false"
@@ -15,13 +19,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.SynchronizeDataActivity"></activity>
-        <activity android:name=".activities.DetailActivity" />
-        <activity android:name=".activities.GeneralDataActivity" />
-        <activity android:name=".activities.EditPlayerActivity" />
         <activity
-            android:name=".activities.HomeActivity"
-            android:label="@string/home_activity" />
+            android:label="Records"
+            android:name=".activities.RecordsActivity"/>
+        <activity
+            android:label="Record Details"
+            android:name=".activities.RecordDetailActivity" />
+        <activity
+            android:label="Photos"
+            android:name=".activities.DetailsPhotosActivity" />
+        <activity
+            android:label="Select Details"
+            android:name=".activities.DetailsSelectionActivity" />
+        <activity
+            android:label="Personal Details"
+            android:name=".activities.DetailsPersonalActivity" />
+        <activity
+            android:label="Sync Data"
+            android:name=".activities.SynchronizeDataActivity" />
+        <activity
+            android:name=".activities.GeneralDataActivity" />
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,6 +46,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.cs4sample.authentication.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
     </application>
 
 </manifest>

@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
 
-public class SQLiteHelperfrcghv extends SQLiteOpenHelper {
+public class SQLiteHelp extends SQLiteOpenHelper {
     // database
     public static String DB_NAME = DatabaseManager.LOGIN_SAMPLE_DB;
     public static String DB_PATH;
@@ -29,7 +29,7 @@ public class SQLiteHelperfrcghv extends SQLiteOpenHelper {
     // Extra space required for database (1MB).
     static final long DATABASE_PAD_SIZE = 1048576;
 
-    public SQLiteHelperfrcghv(@Nullable Context context) {
+    public SQLiteHelp(@Nullable Context context) {
         super(context, DatabaseManager.LOGIN_SAMPLE_DB,
                 null, DatabaseManager.DATABASE_VERSION);
         this.mContext = context;
@@ -182,12 +182,6 @@ public class SQLiteHelperfrcghv extends SQLiteOpenHelper {
         @Override
     public void onCreate(SQLiteDatabase db) {
 //            DatabaseSchema.createDatabaseTables(db);
-            String genderTable = "CREATE TABLE " + DatabaseSchema.GENDER_TB +
-                    "(" + DatabaseSchema.ROW_$ID + " TEXT PRIMARY KEY NOT NULL,"
-                    + DatabaseSchema.ROW_ID + " INTEGER "
-                    + DatabaseSchema.GENDER_CHARACTER + " TEXT"
-                    + DatabaseSchema.GENDER_NAME + ")";
-            db.execSQL(genderTable);
     }
 
     @Override

@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.cs4sample.authentication.Constants;
 import com.cs4sample.authentication.R;
 import com.cs4sample.authentication.database.DatabaseManager;
+import com.cs4sample.authentication.interfaces.LoginListener;
 import com.cs4sample.authentication.services.LoginService;
 
 import org.json.JSONException;
@@ -33,7 +34,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity
-        implements View.OnClickListener {
+        implements View.OnClickListener, LoginListener {
     // activity views
     private EditText nameEditText;
     private EditText passwordEditText;
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity
     private static  String mPassword = "";
     private static boolean mRemember;
     private static boolean mFirstLogin;
+    private LoginService mLoginService;
 //    private static boolean mSuccess;
 
 
@@ -94,6 +96,7 @@ public class MainActivity extends AppCompatActivity
         switch (id) {
             case R.id.signInButton:
                 loginInUser();
+                new LoginService.AuthTask(this, mUsername, mPassword).execute();
                 break;
 
         }
@@ -107,6 +110,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void loginListener(String token) {
+        processLoginAfterGettingAuthToken(token);
+    }
+
     private void loginInUser() {
         if (!mRemember) {
             mUsername = nameEditText.getText().toString().trim();
@@ -118,12 +126,14 @@ public class MainActivity extends AppCompatActivity
             }
         }
 
-        new LoginService.AuthTask(this, mUsername, mPassword).execute();
+    }
+
+    private void processLoginAfterGettingAuthToken(String token) {
         nameEditText.setText("");
         passwordEditText.setText("");
         Log.d("successful token", LoginService.AUTH_TOKEN);
 
-        if (!TextUtils.isEmpty(LoginService.AUTH_TOKEN)) {
+        if (!TextUtils.isEmpty(token)) {
             String username = LoginService.loginMap.get("username");
             String password = LoginService.loginMap.get("password");
 
@@ -137,13 +147,12 @@ public class MainActivity extends AppCompatActivity
                 mEditor.commit();
             }
             Toast.makeText(this, "Authentication success", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, SynchronizeDataActivity.class);
+            Intent intent = new Intent(this, DetailsPersonalActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             this.startActivity(intent);
         }else {
             Toast.makeText(this, "Authentication failed", Toast.LENGTH_SHORT).show();
         }
-
     }
 
 }

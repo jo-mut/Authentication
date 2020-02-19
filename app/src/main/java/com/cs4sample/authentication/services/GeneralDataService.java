@@ -5,13 +5,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.cs4sample.authentication.Constants;
-import com.cs4sample.authentication.interfaces.AsyncTaskListener;
-import com.cs4sample.authentication.models.Gender;
-import com.cs4sample.authentication.models.Main;
-import com.cs4sample.authentication.models.Proffession;
+import com.cs4sample.authentication.interfaces.JsonObjectListener;
 import com.google.common.io.ByteStreams;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,28 +20,24 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GeneralDataService {
     private static HttpURLConnection urlConnection = null;
-    private static WeakReference<Context> mContext;
+    private static JSONObject jsonObject = null;
+
 
 
     public static class GeneralTask extends AsyncTask<Void, Void, Void> {
         private String mToken;
-        public static JSONArray mMainList  = new JSONArray();
-        public static List<Proffession> proffessions = new ArrayList<>();
-        public static List<Gender> mGenderList = new ArrayList<>();
-
-        private AsyncTaskListener mListener;
+        private JsonObjectListener jsonObjectListener;
         public static String progressMessage = "";
+        private static WeakReference<Context> mContext;
 
 
         public GeneralTask(Context context, String token) {
             this.mToken = token;
             mContext = new WeakReference<>(context);
-            mListener = (AsyncTaskListener) context;
+            jsonObjectListener = (JsonObjectListener) mContext.get();
         }
 
 
@@ -53,6 +45,7 @@ public class GeneralDataService {
         protected Void doInBackground(Void... voids) {
             progressMessage = "Getting professions";
             parseGeneralJsonObject(mToken);
+
             return null;
         }
 
@@ -64,7 +57,7 @@ public class GeneralDataService {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            mListener.updateResult(proffessions);
+            jsonObjectListener.objectListener(jsonObject);
         }
 
 
@@ -73,7 +66,8 @@ public class GeneralDataService {
     // return username and the password the successuflly logged in the user
     private static void parseGeneralJsonObject(String token){
         String address = Constants.BASE_URL + Constants.GENERAL_DATA;
-        JSONObject mainJsonObject = null;
+        Log.d("json address", address);
+
         try {
             URL url = new URL(address);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -91,9 +85,9 @@ public class GeneralDataService {
                 String curr=new String(buffer, "UTF-8");
                 data+=curr;
             }
-            mainJsonObject = new JSONObject(data);
-            getProffessionList(mainJsonObject);
-            getGenderList(mainJsonObject);
+            jsonObject = new JSONObject(data);
+            Log.d("json obj", jsonObject.toString());
+
 
         }catch (MalformedURLException mal) {
             mal.printStackTrace();
@@ -125,44 +119,5 @@ public class GeneralDataService {
         return jsonObject;
     }
 
-    private static List<Proffession> getProffessionList(JSONObject object) {
-        List<Proffession> proffessions = new ArrayList<>();
 
-        try {
-            JSONArray jsonArray = object.getJSONObject("Result").getJSONArray("ProffessionList");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                Proffession proffession = new Proffession();
-                proffession.set$id(jsonObject.getString("$id"));
-                proffession.setId(jsonObject.getString("Id"));
-                proffession.setCode(jsonObject.getString("Code"));
-                proffession.setName(jsonObject.getString("Name"));
-                GeneralTask.proffessions.add(proffession);
-
-            }
-
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return proffessions;
-    }
-
-    private static List<Gender> getGenderList(JSONObject object) {
-        List<Gender> genderLists = new ArrayList<>();
-        try {
-            JSONArray jsonArray = object.getJSONObject("Result").getJSONArray("GenderList");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject genderObject = jsonArray.getJSONObject(i);
-                Gender gender = new Gender();
-                gender.setId(genderObject.getInt("Id"));
-                gender.setGenderCharacter(genderObject.getString("GenderCharacter"));
-                gender.setGenderName(genderObject.getString("GenderName"));
-                GeneralTask.mGenderList.add(gender);
-            }
-
-        }catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return genderLists;
-    }
 }
